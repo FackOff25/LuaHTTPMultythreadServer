@@ -8,7 +8,7 @@ local responseCode = {
 
 local Header = {
     name = "",
-    value = ""
+    value = "",
 }
 
 Response = {
@@ -34,5 +34,5 @@ function Response:makeResponseString()
     for _,header in pairs(self.headers) do
         response = response .. header.name .. ": " .. header.value .. "\n";
     end
-    return response
+    return response;
 end
