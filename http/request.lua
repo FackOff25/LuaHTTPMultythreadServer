@@ -1,5 +1,5 @@
 require "http.httpUtils"
-
+---@alias Request {method: string, url: string, HTTPversion: string, headers: {[string] : string}, body: string}
 Request = {
     method = "",
     url = "",
@@ -9,7 +9,7 @@ Request = {
 }
 
 ---@param str string
----@return string{}
+---@return string[]
 local function stringToLines(str)
     local lines = {};
     for s in str:gmatch("[^\r\n]*") do
@@ -19,7 +19,7 @@ local function stringToLines(str)
 end
 
 ---@param str string
----@return string string string
+---@return string method, string url, string version
 local function parseRequestFirstLine(str)
     local line = str;
     local method = string.match(line, "[A-Z]+");
@@ -89,7 +89,7 @@ end
 --- @return {name: string, value: string}
 function Request:getHeaders()
     local headers = {};
-    for name, value in pairs(request.headers) do
+    for name, value in pairs(self.headers) do
         headers[name] = value;
     end
     return headers;

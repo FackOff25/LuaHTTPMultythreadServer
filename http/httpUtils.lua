@@ -5,7 +5,7 @@ responseCode = {
     [405] = "Method Not Allowed",
     [500] = "Internal Server Error",
 }
-
+---@alias Header {name: string, value: string}
 Header = {
     name = "",
     value = "",
@@ -14,7 +14,7 @@ Header = {
 --- func desc
 ---@param name string
 ---@param value string
----@return Header = {name: string, value = string}
+---@return Header
 function Header:new(name, value)
     local header = {};
     setmetatable(header, self);
