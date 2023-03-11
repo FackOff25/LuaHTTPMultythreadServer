@@ -1,20 +1,24 @@
----@alias Response {HTTPversion: string, code: number, headers: {[string] : string}}
+require("http.httpUtils")
+
+---@alias Response {HTTPversion: string, code: number, headers: { [string]: string },makeResponseString: function,new: function,setHeaders: function,index: table,}
 Response = {
     HTTPversion = "1.1",
     code = 0,
     headers = {},
+    body = "",
 }
 
 ---@param code number
 ---@param headers {[string] : string}
 ---@return Response
-function Response:new(code, headers)
+function Response:new(code, headers, body)
     local res = {};
     setmetatable(res,self);
 
     self.__index = self;
     self.code = code or 500;
     self.headers = headers or {};
+    self.body = body;
 
     return res;
 end
@@ -26,6 +30,9 @@ function Response:makeResponseString()
     response = response .. self.code .. " " .. responseCode[self.code] .. "\n";
     for name, value in pairs(self.headers) do
         response = response .. name .. ": " .. value .. "\n";
+    end
+    if self.body then
+        response = response .. "\n" .. self.body .. "\n";
     end
     return response;
 end
