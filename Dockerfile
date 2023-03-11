@@ -8,10 +8,10 @@ RUN apt-get -y update && apt-get install -y tzdata
 RUN ln -snf /usr/share/zoneinfo/Russia/Moscow /etc/localtime && echo Russia/Moscow > /etc/timezone
 
 RUN apt-get install lua5.3 -y
-RUN apt-get install luarocks
+RUN apt-get install luarocks -y
 
 RUN ls
 
-RUN lua server.lua
+RUN lua main.lua
 
 EXPOSE 80
