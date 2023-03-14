@@ -46,5 +46,5 @@ function Response:setHeaders(headers)
 end
 
 function Response:get404(headers)
-    return Response:new(404, {})
+    return Response:new(404, headers)
 end

@@ -28,7 +28,6 @@ local function getHandler(fd)
     local handler = function()
         local socket = require("socket-lanes");
         require("listener.utils");
-        
         local connection, e = socket.tcp(fd);
         if e ~= "closed" then
             local f = io.open("test2.png", "rb" );
