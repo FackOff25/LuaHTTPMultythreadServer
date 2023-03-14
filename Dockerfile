@@ -9,6 +9,6 @@ RUN ln -snf /usr/share/zoneinfo/Russia/Moscow /etc/localtime && echo Russia/Mosc
 
 RUN apt install lua5.3 -y
 
-RUN lua main.lua
-
 EXPOSE 80
+
+CMD lua main.lua
