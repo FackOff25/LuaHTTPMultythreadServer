@@ -43,3 +43,8 @@ client:send(response:makeResponseString());
 socket.select(nil, nil, 3)
 client:close()
 socket.select(nil, nil, 3)]]
+
+--[[local line = "/httptest/space%20in%20name.txt HTTP/1.1";
+
+local url = string.match(line, "[^ ]+");
+line = line:gsub(url .. " " .. "HTTP/", '');]]

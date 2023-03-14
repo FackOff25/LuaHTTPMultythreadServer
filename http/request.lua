@@ -1,5 +1,6 @@
-require "http.httpUtils"
----@alias Request {method: string, url: string, HTTPversion: string, headers: {[string] : string}, body: string}
+require("http.httpUtils");
+
+---@class Request
 Request = {
     method = "",
     url = "",
@@ -18,16 +19,37 @@ local function stringToLines(str)
     return lines
 end
 
+local hex_to_char = function(x)
+    return string.char(tonumber(x, 16))
+end
+  
+local unescape = function(url)
+  return url:gsub("%%(%x%x)", hex_to_char)
+end
+  
+
 ---@param str string
 ---@return string method, string url, string version
 local function parseRequestFirstLine(str)
     local line = str;
+
     local method = string.match(line, "[A-Z]+");
     line = line:gsub(method .. " ", '');
+
     local url = string.match(line, "[^ ]+");
+    local newurl = unescape(url);
+    unescape(line);
+    while url ~= newurl do
+        url = newurl;
+        newurl = unescape(url);
+        unescape(line);
+    end
     line = line:gsub(url .. " " .. "HTTP/", '');
+
     local version = string.match(line, "[0-9.]+");
     
+    url = string.match(url, "[^?]+");
+
     if (method == nil or url == nil or version == nil) then
         return nil;
     else

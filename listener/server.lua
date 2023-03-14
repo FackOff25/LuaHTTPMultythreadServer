@@ -28,11 +28,26 @@ local function getHandler(fd)
     local handler = function()
         local socket = require("socket-lanes");
         require("listener.utils");
+
         local connection, e = socket.tcp(fd);
-        if e ~= "closed" then
-            local f = io.open("test2.png", "rb" );
+
+        local req = connection:receive();
+        local request = getRequest(req);
+
+        if(request.method ~= 'GET' and request.method ~= 'HEAD') then
+            SendMethodNotAllowed(connection);
+        elseif e ~= "closed" then
+            local path = "." .. request.url;
+
+            if isDir(path) then
+                if path:sub(-1) ~= "/" then
+                    path = path .. "/";
+                end
+                path = path .. "index.html";
+            end
+            local f = io.open(path, "rb" );
             if (f ~= nil) then
-                SendFile(f, connection);
+                SendFile(f, connection, request.method);
             else
                 SendNotFound(connection);
             end

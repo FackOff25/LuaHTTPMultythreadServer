@@ -48,3 +48,7 @@ end
 function Response:get404(headers)
     return Response:new(404, headers)
 end
+
+function Response:get405(headers)
+    return Response:new(405, headers)
+end
