@@ -1,5 +1,5 @@
-package.path = package.path .. ";" .. "/home/fackoff/.luarocks/share/lua/5.3/?.lua"
-package.cpath = package.cpath .. ";" .."/home/fackoff/.luarocks/lib/lua/5.3/?.so"
+package.path = package.path .. ";" .. "./socket/share/?.lua"
+package.cpath = package.cpath .. ";" .."./socket/lib/?.so"
 
 local socket = require("socket-lanes");
 require("http.response");
@@ -26,9 +26,9 @@ end
 
 local function getHandler(fd)
     local handler = function()
-        print("handler")
         local socket = require("socket-lanes");
         require("listener.utils");
+        
         local connection, e = socket.tcp(fd);
         if e ~= "closed" then
             local f = io.open("test2.png", "rb" );
