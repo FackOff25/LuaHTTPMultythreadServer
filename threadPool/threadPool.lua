@@ -1,3 +1,6 @@
+package.path = package.path .. ";" .. "./lua/share/?.lua"
+package.cpath = package.cpath .. ";" .."./lua/lib/?.so"
+
 require("threadPool.utils");
 ---@class ThreadPool
 ThreadPool = {

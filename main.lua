@@ -1,5 +1,5 @@
-package.path = package.path .. ";" .. "/home/fackoff/.luarocks/share/lua/5.3/?.lua"
-package.cpath = package.cpath .. ";" .."/home/fackoff/.luarocks/lib/lua/5.3/?.so"
+package.path = package.path .. ";" .. "./lua/share/?.lua"
+package.cpath = package.cpath .. ";" .."./lua/lib/?.so"
 
 require("listener.server")
 

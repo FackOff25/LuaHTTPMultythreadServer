@@ -7,9 +7,7 @@ WORKDIR /server/
 RUN apt-get -y update && apt-get install -y tzdata
 RUN ln -snf /usr/share/zoneinfo/Russia/Moscow /etc/localtime && echo Russia/Moscow > /etc/timezone
 
-RUN apt install liblua5.3-dev -y
-RUN apt-get install luarocks -y
-RUN luarocks install effil
+RUN apt install lua5.3 -y
 
 RUN lua main.lua
 
