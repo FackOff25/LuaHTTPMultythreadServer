@@ -1,6 +1,6 @@
 require("http.httpUtils")
 
----@alias Response {HTTPversion: string, code: number, headers: { [string]: string },makeResponseString: function,new: function,setHeaders: function,index: table,}
+---@class Response
 Response = {
     HTTPversion = "1.1",
     code = 0,
@@ -43,4 +43,8 @@ function Response:setHeaders(headers)
     for name, value in pairs(headers) do
         self.headers[name] = value;
     end
+end
+
+function Response:get404(headers)
+    return Response:new(404, {})
 end

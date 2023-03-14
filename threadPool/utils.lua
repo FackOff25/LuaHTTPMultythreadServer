@@ -10,7 +10,7 @@ function GetPoolSize()
     file:close();]]
     local effil = require("effil");
     local poolSize = effil.hardware_threads();
-    return poolSize;
+    return poolSize - 1;
 end
 
 ---@param job function

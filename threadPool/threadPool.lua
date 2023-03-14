@@ -29,7 +29,6 @@ function ThreadPool:work(job)
         thread = table.remove(self.freeThreads, 1);
     end
     local tr = thread(job);
-    print(tr:status())
     table.insert(self.workingThreads, {tr, thread});
 end
 
