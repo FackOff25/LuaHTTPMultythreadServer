@@ -1,3 +1,14 @@
+local typesTable = {
+    ["html"] = "text/html",
+    ["css"] = "text/css",
+    ["js"] = "application/javascript",
+    ["jpg"] = "image/jpeg",
+    ["jpeg"] = "image/jpeg",
+    ["png"] = "image/png",
+    ["gif"] = "image/gif",
+    ["swf"] = "application/x-shockwave-flash",
+}
+
 local function fileSize (file)
     local current = file:seek()      -- get current position
     local size = file:seek("end")    -- get file size
@@ -16,15 +27,16 @@ function SendFile (file, conn, method)
 
     local size = fileSize( file );
     local dateTime = getDateHeader();
-
+    print(file.name)
     local response = Response:new(
         200, 
     {   ["Server"]="LuaServer", 
         ['Date'] = dateTime, 
         ["Connection"] = "close", 
         ['Content-Type'] = "image/png", 
-        ['Content-Length'] = size, }
-)
+        ['Content-Length'] = size,
+    })
+
     conn:send(response:makeResponseString() .. "\n");
 
     if method == "GET" then
