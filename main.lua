@@ -15,14 +15,15 @@ local effil = require("effil");
 require("threadPool.threadPool");
 
 local function job()
-	for i = 1, 5 do
+	local socket = require("socket");
+	for i = 1, 3 do
 		io.write(i.."\n")
-		socket.select(nil, nil, 2)
+		socket.select(nil, nil, 1)
 	end
 end	
 
 local pool = ThreadPool:new();
-for i = 1, 5 do
+for i = 1, 10 do
 	pool:work(job);
 end
 

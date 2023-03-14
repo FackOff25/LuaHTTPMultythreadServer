@@ -1,18 +1,10 @@
-local effil = require("effil");
+require("threadPool.utils");
 ---@class ThreadPool
 ThreadPool = {
     size = 0,
     freeThreads = {},
+    workingThreads = {},
 }
-
----@param pool ThreadPool
----@param job function
-local routine = function(job)
-    --local effil = require("effil");
-    print(job)
-    --job();
-    --table.insert(pool.freeThreads, effil.thread(routine));
-end
 
 function ThreadPool:new()
     local effil = require("effil");
@@ -20,9 +12,9 @@ function ThreadPool:new()
     setmetatable(obj,self);
 
     self.__index = self;
-    self.size = getPoolSize();
+    self.size = GetPoolSize();
     for i = 1, self.size do
-        local newThread = effil.thread(routine);
+        local newThread = effil.thread(Routine);
         table.insert(self.freeThreads, newThread);
     end
 
@@ -30,16 +22,23 @@ function ThreadPool:new()
 end
 
 ---@param job function
-function ThreadPool:work()
-    local thread = table.remove(self.freeThreads, 1);
-    thread();
+function ThreadPool:work(job)
+    local thread = table.remove(self.freeThreads, 1);;
+    while thread == nil do
+        self:moveFinished();
+        thread = table.remove(self.freeThreads, 1);
+    end
+    local tr = thread(job);
+    print(tr:status())
+    table.insert(self.workingThreads, {tr, thread});
 end
 
---- returns max pool of threads
----@param size number
-function getPoolSize()
-    local file = io.open("/proc/sys/kernel/threads-max", "r");
-    local poolSize = file:read("*number");
-    file:close();
-    return poolSize / 2;
+function ThreadPool:moveFinished()
+    for idx, item in ipairs(self.workingThreads) do
+        local status = item[1]:status();
+        if (status ~= "running" and status ~= "paused") then
+            local runnerThread = table.remove(self.workingThreads, idx);
+            table.insert(self.freeThreads, runnerThread[2]);
+        end
+    end
 end
