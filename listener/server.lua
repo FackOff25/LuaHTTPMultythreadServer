@@ -1,6 +1,9 @@
-local socket = require("socket");
+package.path = package.path .. ";" .. "/home/fackoff/.luarocks/share/lua/5.3/?.lua"
+package.cpath = package.cpath .. ";" .."/home/fackoff/.luarocks/lib/lua/5.3/?.so"
+
+local socket = require("socket-lanes");
 require("http.response");
-local ltn12 = require("ltn12");
+
 require("threadPool.threadPool");
 require("listener.utils")
 
@@ -21,10 +24,13 @@ function Server:new()
     return serv;
 end
 
-local function getHandler(connection)
+local function getHandler(fd)
     local handler = function()
-        local data, e = connection:receive();
-        if e ~= "closed" and data then
+        print("handler")
+        local socket = require("socket-lanes");
+        require("listener.utils");
+        local connection, e = socket.tcp(fd);
+        if e ~= "closed" then
             local f = io.open("test2.png", "rb" );
             if (f ~= nil) then
                 SendFile(f, connection);
@@ -63,7 +69,7 @@ function Server:start(host, port)
             while #self.connections > 0 do
                 local conn = table.remove(self.connections);
                 local job = getHandler(conn);
-                job();
+                pool:work(job);
             end
         end
 end
@@ -77,7 +83,7 @@ function Server:stop()
 end
 
 function Server:acceptClient(pool)
-    local conn = self.server:accept();
+    local conn = self.server:acceptfd();
     if conn then
         table.insert(self.connections, conn);
     end

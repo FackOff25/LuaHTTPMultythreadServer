@@ -6,6 +6,7 @@ local function fileSize (file)
 end
 
 function SendFile (file, conn)
+    require("http.response");
     local size = fileSize( file );
     local response = Response:new(200, {['Content-Type'] = "image/png", ['Content-Length'] = size})
     conn:send(response:makeResponseString())
@@ -18,6 +19,7 @@ function SendFile (file, conn)
 end
 
 function SendNotFound (conn)
+    require("http.response");
     local response = Response:get404();
     conn:send(response:makeResponseString())
 end
