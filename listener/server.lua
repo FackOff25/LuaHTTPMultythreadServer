@@ -47,7 +47,7 @@ local function getHandler(fd)
             end
             local f = io.open(path, "rb" );
             if (f ~= nil) then
-                SendFile(f, connection, request.method);
+                SendFile(path, connection, request.method);
             else
                 SendNotFound(connection);
             end

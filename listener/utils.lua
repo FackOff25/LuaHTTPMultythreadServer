@@ -1,12 +1,12 @@
 local typesTable = {
-    ["html"] = "text/html",
-    ["css"] = "text/css",
-    ["js"] = "application/javascript",
-    ["jpg"] = "image/jpeg",
-    ["jpeg"] = "image/jpeg",
-    ["png"] = "image/png",
-    ["gif"] = "image/gif",
-    ["swf"] = "application/x-shockwave-flash",
+    [".html"] = "text/html",
+    [".css"] = "text/css",
+    [".js"] = "application/javascript",
+    [".jpg"] = "image/jpeg",
+    [".jpeg"] = "image/jpeg",
+    [".png"] = "image/png",
+    [".gif"] = "image/gif",
+    [".swf"] = "application/x-shockwave-flash",
 }
 
 local function fileSize (file)
@@ -21,19 +21,30 @@ local function getDateHeader()
     return dateTime;
 end
 
-function SendFile (file, conn, method)
+local function getContentType(extention)
+    local type = typesTable[extention] or "application/octet-stream"
+    return type;
+end
+
+--- func desc
+---@param filePath string
+---@param conn connection
+---@param method? string
+function SendFile (filePath, conn, method)
     require("http.response");
     method = method or "GET";
 
+    local file = io.open(filePath, "rb");
     local size = fileSize( file );
     local dateTime = getDateHeader();
-    print(file.name)
+    local extention = string.match(filePath, "[.][a-zA-Z]+$");
+
     local response = Response:new(
         200, 
     {   ["Server"]="LuaServer", 
         ['Date'] = dateTime, 
         ["Connection"] = "close", 
-        ['Content-Type'] = "image/png", 
+        ['Content-Type'] = getContentType(extention), 
         ['Content-Length'] = size,
     })
 
