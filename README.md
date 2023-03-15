@@ -55,10 +55,10 @@ lua perfTest.lua
 ## Сравнительная оценка результатов тестирования
 Нагрузочное тестирование производилось с помощью Apache HTTP server benchmarking tool с 4 потоками для обоих серверов
 
-* **RPS c** = 1338.07
-* **RPS_nginx** = 1997.38
+* **LuaServerRPS** = 1338.07
+* **nginx_RPS** = 1997.38
 
-RPS_serv/RPS_nginx ~ **0.67**
+LuaServerRPS/nginx_RPS ~ **0.67**
 
 ### Сервер
 1 поток:
