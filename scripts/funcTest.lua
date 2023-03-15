@@ -1,1 +1,1 @@
-os.execute("cd ../http-test-suit && ./httptest.py")
+os.execute("cd ../testing-module && ./httptest.py")

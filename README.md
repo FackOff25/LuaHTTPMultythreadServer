@@ -60,8 +60,18 @@ lua perfTest.lua
 
 LuaServerRPS/nginx_RPS ~ **0.67**
 
+Таблица сравнения RPS:
+|Потоки/воркеры|1 |2      |4      |8      |12     |
+|---------|-------|-------|-------|-------|-------|
+|Nginx    |1869.00|1985.14|[1997.38](#nginx)|2120.92|2024.02|
+|LuaServer|[201.96](#1-поток) |[386.17](#2-потока) |[1338.07](#4-потока)|[4592.80](#8-потоков)|[2650.80](#12-потоков)|
+
+12 - максимум машины, на которой проводилось тестирование
+
 ### Сервер
-1 поток:
+## 1 поток:
+[К таблице RPS](#сравнительная-оценка-результатов-тестирования)
+
 ```
 Server Software:        LuaServer
 Server Hostname:        127.0.0.1
@@ -99,7 +109,9 @@ Percentage of the requests served within a certain time (ms)
   99%    119
  100%    123 (longest request)
 ```
-2 потока:
+## 2 потока:
+[К таблице RPS](#сравнительная-оценка-результатов-тестирования)
+
 ```
 Server Software:        LuaServer
 Server Hostname:        127.0.0.1
@@ -137,7 +149,9 @@ Percentage of the requests served within a certain time (ms)
   99%     67
  100%     71 (longest request)
 ```
-4 потока:
+## 4 потока:
+[К таблице RPS](#сравнительная-оценка-результатов-тестирования)
+
 ```
 Server Software:        LuaServer
 Server Hostname:        127.0.0.1
@@ -177,7 +191,91 @@ Percentage of the requests served within a certain time (ms)
  100%    163 (longest request)
 ```
 
+## 8 потоков:
+[К таблице RPS](#сравнительная-оценка-результатов-тестирования)
+
+```
+Server Software:        LuaServer
+Server Hostname:        127.0.0.1
+Server Port:            80
+
+Document Path:          /httptest/wikipedia_russia.html
+Document Length:        954824 bytes
+
+Concurrency Level:      20
+Time taken for tests:   0.218 seconds
+Complete requests:      1000
+Failed requests:        1939
+   (Connect: 0, Receive: 0, Length: 980, Exceptions: 959)
+Total transferred:      20940193 bytes
+HTML transferred:       20936904 bytes
+Requests per second:    4592.80 [#/sec] (mean)
+Time per request:       4.355 [ms] (mean)
+Time per request:       0.218 [ms] (mean, across all concurrent requests)
+Transfer rate:          93920.08 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.2      0       2
+Processing:     0    4  20.0      0     170
+Waiting:        0    1   4.5      0      43
+Total:          0    4  19.9      1     170
+
+Percentage of the requests served within a certain time (ms)
+  50%      1
+  66%      1
+  75%      1
+  80%      1
+  90%      1
+  95%      2
+  98%    122
+  99%    129
+ 100%    170 (longest request)
+```
+## 12 потоков:
+[К таблице RPS](#сравнительная-оценка-результатов-тестирования)
+
+```
+Server Software:        LuaServer
+Server Hostname:        127.0.0.1
+Server Port:            80
+
+Document Path:          /httptest/wikipedia_russia.html
+Document Length:        954824 bytes
+
+Concurrency Level:      20
+Time taken for tests:   0.377 seconds
+Complete requests:      1000
+Failed requests:        1758
+   (Connect: 0, Receive: 0, Length: 892, Exceptions: 866)
+Total transferred:      110769091 bytes
+HTML transferred:       110752360 bytes
+Requests per second:    2650.80 [#/sec] (mean)
+Time per request:       7.545 [ms] (mean)
+Time per request:       0.377 [ms] (mean, across all concurrent requests)
+Transfer rate:          286744.53 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.2      0       1
+Processing:     0    7  22.8      0     148
+Waiting:        0    3  11.7      0      89
+Total:          1    7  22.7      1     148
+
+Percentage of the requests served within a certain time (ms)
+  50%      1
+  66%      1
+  75%      1
+  80%      1
+  90%     17
+  95%     45
+  98%    127
+  99%    137
+ 100%    148 (longest request)
+```
 ### Nginx
+[К таблице RPS](#сравнительная-оценка-результатов-тестирования)
+
 4 воркера:
 ```
 Server Software:        nginx/1.23.3
