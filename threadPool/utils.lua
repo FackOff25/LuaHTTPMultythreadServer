@@ -8,9 +8,13 @@ function GetPoolSize()
     end
     local poolSize = file:read("*number");
     file:close();]]
-    local effil = require("effil");
-    local poolSize = effil.hardware_threads();
-    return poolSize - 1;
+    if cfg["CPU"]["cpu_limit"] == nil then
+        local effil = require("effil");
+        local poolSize = effil.hardware_threads();
+        return poolSize - 1;
+    end
+
+    return cfg["CPU"]["cpu_limit"];
 end
 
 ---@param job function

@@ -3,8 +3,12 @@ package.cpath = package.cpath .. ";" .."./lua/lib/?.so"
 
 require("listener.server")
 
-host = host or "*"
-port = port or 80
+require("configParser");
+
+cfg = MakeConfigTable("./httpd.conf");
+
+host = cfg["Server"]["host"] or "*"
+port = cfg["Server"]["port"] or 80
 if arg then
 	host = arg[1] or host
 	port = arg[2] or port

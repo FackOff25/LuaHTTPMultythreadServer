@@ -16,6 +16,7 @@ function ThreadPool:new()
 
     self.__index = self;
     self.size = GetPoolSize();
+    print("Additional threads:" .. self.size);
     for i = 1, self.size do
         local newThread = effil.thread(Routine);
         table.insert(self.freeThreads, newThread);

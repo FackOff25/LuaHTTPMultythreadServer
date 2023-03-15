@@ -84,7 +84,8 @@ function Server:start(host, port)
         self.port = p;
         self.isOn = true;
         local pool = ThreadPool:new();
-        
+
+        print("Server listen on: " .. self.host .. ":" .. self.port);
         while self.isOn do
             self:acceptClient(pool);
             while #self.connections > 0 do
