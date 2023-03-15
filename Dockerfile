@@ -11,4 +11,6 @@ RUN apt install lua5.3 -y
 
 EXPOSE 80
 
-CMD lua main.lua
+RUN chmod +x ./main.lua
+
+CMD lua ./main.lua

@@ -39,6 +39,10 @@ local function getHandler(fd)
         elseif e ~= "closed" then
             local path = "." .. request.url;
 
+            if isForbidden(path) then
+                SendForbidden(connection);
+            end
+
             if isDir(path) then
                 if path:sub(-1) ~= "/" then
                     path = path .. "/";
@@ -46,8 +50,11 @@ local function getHandler(fd)
                 path = path .. "index.html";
             end
             local f = io.open(path, "rb" );
+
             if (f ~= nil) then
                 SendFile(path, connection, request.method);
+            elseif path ~= "." .. request.url then
+                SendForbidden(connection);
             else
                 SendNotFound(connection);
             end

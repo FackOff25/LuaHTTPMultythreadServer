@@ -48,7 +48,7 @@ function SendFile (filePath, conn, method)
         ['Content-Length'] = size,
     })
 
-    conn:send(response:makeResponseString() .. "\n");
+    conn:send(response:makeResponseString() .. "\r\n");
 
     if method == "GET" then
         local t = file:read(4*1024);
@@ -59,6 +59,15 @@ function SendFile (filePath, conn, method)
     end
     
     file:close();
+end
+
+function SendForbidden (conn)
+    require("http.response");
+
+    local dateTime = getDateHeader();
+    local response = Response:get403({["Server"]="LuaServer", ["Date"] = dateTime, ["Connection"] = "close"});
+
+    conn:send(response:makeResponseString())
 end
 
 function SendNotFound (conn)
@@ -72,8 +81,10 @@ end
 
 function SendMethodNotAllowed (conn)
     require("http.response");
+
     local dateTime = getDateHeader();
     local response = Response:get405({["Server"]="LuaServer", ["Date"] = dateTime, ["Connection"] = "close"});
+
     conn:send(response:makeResponseString())
 end
 
@@ -95,4 +106,10 @@ function isDir(path)
     local ok, err, code = f:read(1);
     f:close();
     return code == 21;
+end
+
+function isForbidden(path)
+    local _, comeDownCount = string.gsub(path, "[.][.]/", "");
+    local _, comeUpCount = string.gsub(path, "/[^/.]+/", "");
+    return comeUpCount < comeDownCount;
 end

@@ -27,12 +27,12 @@ end
 ---@return string
 function Response:makeResponseString()
     local response = "HTTP/" .. self.HTTPversion .. " ";
-    response = response .. self.code .. " " .. responseCode[self.code] .. "\n";
+    response = response .. self.code .. " " .. responseCode[self.code] .. "\r\n";
     for name, value in pairs(self.headers) do
-        response = response .. name .. ": " .. value .. "\n";
+        response = response .. name .. ": " .. value .. "\r\n";
     end
     if self.body then
-        response = response .. "\n" .. self.body .. "\n";
+        response = response .. "\r\n" .. self.body .. "\r\n";
     end
     return response;
 end
@@ -43,6 +43,10 @@ function Response:setHeaders(headers)
     for name, value in pairs(headers) do
         self.headers[name] = value;
     end
+end
+
+function Response:get403(headers)
+    return Response:new(403, headers)
 end
 
 function Response:get404(headers)
