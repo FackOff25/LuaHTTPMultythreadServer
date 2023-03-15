@@ -1,0 +1,1 @@
+os.execute("cd ../http-test-suit && ./httptest.py")

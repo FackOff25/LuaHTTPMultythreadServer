@@ -1,0 +1,1 @@
+os.execute("ab -n 1000 -c 20 -s 1 127.0.0.1:80/httptest/wikipedia_russia.html")
