@@ -1,4 +1,6 @@
 ## General Information
+Multythread server for serving statics via http
+
 * Language: **Lua** (version 5.3.3)
 * Multythread realisation: **thread pool**
 * Web api lib: **socket-lanes** (Not modified original socket isn't compatitable multythreading)
