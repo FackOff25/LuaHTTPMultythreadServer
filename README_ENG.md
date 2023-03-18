@@ -1,78 +1,79 @@
-## Общая информация
-* Язык программирования: **Lua** (Версия 5.3.3)
-* Реализация многопоточности: **thread pool**
-* Сетевое взаимодействие: **socket-lanes** (немодифицированный оригинальный socket несовместим с многопоточной обработкой соединений)
-* Потоки: **effil**
+## General Information
+* Language: **Lua** (version 5.3.3)
+* Multythread realisation: **thread pool**
+* Web api lib: **socket-lanes** (Not modified original socket isn't compatitable multythreading)
+* Thread api lin: **effil**
 
-## Конфигурация
-Конфигурационный файл: **luaServer.conf** в папке config
+## Configuration
+Configuration file: **luaServer.conf** in config folder
 
 ### Параметры:
-* host - адрес сервера (по умолчанию `"*"`, если запускается в Docker-контейнере, то изменения не рекомендуются)
-* port - порт, на котором слуаются соединения (по умолчанию `80`)
-* serve_folder - папка, из которой будут раздваваться файлы (По умолчанию раздаёт из папки, из которой запущен)
-* cpu_limit - Максимальное колическтво количество потоков, в котором будут обрабатываться соединения. Рекомендуется устанавливать число, равное числу ядер в системе - 1 (По умолчанию `1`)
+* host - server adress (`"*"` by deafauly, not recomended to modify if is launched in Docker-container)
+* port - port. Unexpecting (`80` by default)
+* serve_folder - directory statics will be served from (by default will serve from directory it is launched at)
+* cpu_limit - max number of threads to serve files at. (`1` by default)
 
-## Использование
-Два варианта:
-* Запуск без контейнера 
+## Usage
+Two variations
+* Without Docker:
 ```
 lua main.lua
 ```
 
-* Запуск в контейнере
+* Within Docker
 
-Можно воспользоваться скриптом в папке *scripts* 
-```
- lua buildAndStartDocker.lua
- ```
-1. Сборка. Dockerfile находится в корне
+
+1. Build. The Dockerfile in the root.
  ```
  sudo docker build . -t luaserver
  ``` 
- или воспользоваться скриптом в папке *scripts* 
+ or use script in *scripts*  folder
  ```
  lua buildDocker.lua
  ```
-2. Запуск - 
+2. Launch  
 ```
 sudo docker run -v /home/fackoff/code/6_sem_tech/HighloadHW2/config/luaServer.conf:/server/config/luaServer.conf:ro -p 127.0.0.1:80:80 --name luaserver -t luaserver
 ```
-или воспользоваться скриптом в папке *scripts* 
+or use script in *scripts*  folder
 ```
 lua startDocker.lua
 ```
+or use script in *scripts*  folder for both steps
+```
+ lua buildAndStartDocker.lua
+ ```
+## Testing
+* Functional testing on server with [testing script](https://github.com/init/http-test-suite) (If server is listening not 80 port then its needed to change the port in script manually)
 
-## Тестирование
-* Запуск функционального тестирования на сервер - c помощью [скрипта тестирования](https://github.com/init/http-test-suite) (Если сервер запущен не на 80 порте, то для тесированя потребуется ручное изменение порта в модуле тестирования)
-* Сборка контейнера с Nginx 
+* Nginx container build.
 ```
 sudo docker build -t nginxserver -f nginx.Dockerfile .
 ```
-* Запуск контейнера с Nginx 
+* Launch Nginx container
 ```
 sudo docker run -p 127.0.0.1:80:80 --name nginxserver -t nginxserver
 ```
-* Запуск нагрузочного тестирования на сервер через скрипт в папке scripts
+* Perfomance testing of server via script in scripts folder
 ```
 lua perfTest.lua
 ```
 
-## Сравнительная оценка результатов тестирования
-Нагрузочное тестирование производилось с помощью Apache HTTP server benchmarking tool
+## Comparing table
+Perfomance testing was implemented with Apache HTTP server benchmarking tool
 
 Таблица сравнения RPS:
 |Потоки/воркеры|1 |2      |4      |8      |12     |
 |---------|-------|-------|-------|-------|-------|
-|Nginx    |1869.00|1985.14|[1997.38](#nginx)|2120.92|2024.02|
-|LuaServer|[201.96](#1-поток) |[386.17](#2-потока) |[1338.07](#4-потока)|[4592.80](#8-потоков)|[2650.80](#12-потоков)|
-|Отношение   |0.1    |0,19   |0,67   |2,1    |1,3    |
+|Nginx    |1869.00|1985.14|[1997.38](#4-workers)|2120.92|2024.02|
+|LuaServer|[201.96](#1-thread) |[386.17](#2-threads) |[1338.07](#4-threads)|[4592.80](#8-threads)|[2650.80](#12-threads)|
+|Ratio    |0.1    |0,19   |0,67   |2,1    |1,3    |
 
-12 - максимум машины, на которой проводилось тестирование
+12 threads is maximum of the maching the testing was on
 
 ### LuaServer
-## 1 поток:
-[К таблице RPS](#сравнительная-оценка-результатов-тестирования)
+## 1 thread:
+[To RPS table](#comparing-table)
 
 ```
 Server Software:        LuaServer
@@ -111,8 +112,8 @@ Percentage of the requests served within a certain time (ms)
   99%    119
  100%    123 (longest request)
 ```
-## 2 потока:
-[К таблице RPS](#сравнительная-оценка-результатов-тестирования)
+## 2 threads:
+[To RPS table](#comparing-table)
 
 ```
 Server Software:        LuaServer
@@ -151,8 +152,8 @@ Percentage of the requests served within a certain time (ms)
   99%     67
  100%     71 (longest request)
 ```
-## 4 потока:
-[К таблице RPS](#сравнительная-оценка-результатов-тестирования)
+## 4 threads:
+[To RPS table](#comparing-table)
 
 ```
 Server Software:        LuaServer
@@ -193,8 +194,8 @@ Percentage of the requests served within a certain time (ms)
  100%    163 (longest request)
 ```
 
-## 8 потоков:
-[К таблице RPS](#сравнительная-оценка-результатов-тестирования)
+## 8 threads:
+[To RPS table](#comparing-table)
 
 ```
 Server Software:        LuaServer
@@ -234,8 +235,8 @@ Percentage of the requests served within a certain time (ms)
   99%    129
  100%    170 (longest request)
 ```
-## 12 потоков:
-[К таблице RPS](#сравнительная-оценка-результатов-тестирования)
+## 12 threads:
+[To RPS table](#comparing-table)
 
 ```
 Server Software:        LuaServer
@@ -276,9 +277,9 @@ Percentage of the requests served within a certain time (ms)
  100%    148 (longest request)
 ```
 ### Nginx
-[К таблице RPS](#сравнительная-оценка-результатов-тестирования)
+## 4 workers:
 
-4 воркера:
+[To RPS table](#comparing-table)
 ```
 Server Software:        nginx/1.23.3
 Server Hostname:        127.0.0.1
