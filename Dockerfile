@@ -4,8 +4,7 @@ COPY . /server/
 
 WORKDIR /server/
 
-RUN apt-get -y update && apt-get install -y tzdata
-RUN ln -snf /usr/share/zoneinfo/Russia/Moscow /etc/localtime && echo Russia/Moscow > /etc/timezone
+RUN apt-get -y update
 
 RUN apt install lua5.3 -y
 

@@ -5,7 +5,7 @@ require("listener.server")
 
 require("configParser");
 
-cfg = MakeConfigTable("./httpd.conf");
+cfg = MakeConfigTable("./config/luaServer.conf");
 
 host = cfg["Server"]["host"] or "*"
 port = cfg["Server"]["port"] or 80
@@ -14,7 +14,9 @@ if arg then
 	port = arg[2] or port
 end
 
-local server = Server:new()
+local root = cfg["Server"]["serve_folder"] or nil
+
+local server = Server:new(root)
 server:start(host, port);
 
 --[[local socket = require("socket-lanes");

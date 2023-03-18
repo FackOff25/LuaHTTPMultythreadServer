@@ -7,24 +7,31 @@ require("http.response");
 require("threadPool.threadPool");
 require("listener.utils")
 
+---@class Server
 Server = {
     host = "localhost",
     port = 80,
     isOn = false,
     connections = {},
     server = nil,
+    folder = ".",
 }
 
-function Server:new()
+---@param root? string path to folder to serve files from
+---@return Server
+function Server:new(root)
     local serv = {};
     setmetatable(serv,self);
 
     self.__index = self;
+    self.folder = root or self.folder;
 
     return serv;
 end
 
-local function getHandler(fd)
+---@param fd number fd adress of connection
+---@param root string path to folder to serve files from
+local function getHandler(fd, root)
     local handler = function()
         local socket = require("socket-lanes");
         require("listener.utils");
@@ -37,9 +44,9 @@ local function getHandler(fd)
         if(request.method ~= 'GET' and request.method ~= 'HEAD') then
             SendMethodNotAllowed(connection);
         elseif e ~= "closed" then
-            local path = "." .. request.url;
+            local path = root .. request.url;
 
-            if isForbidden(path) then
+            if isForbidden(request.url) then
                 SendForbidden(connection);
             end
 
@@ -53,7 +60,7 @@ local function getHandler(fd)
 
             if (f ~= nil) then
                 SendFile(path, connection, request.method);
-            elseif path ~= "." .. request.url then
+            elseif path ~= root .. request.url then
                 SendForbidden(connection);
             else
                 SendNotFound(connection);
@@ -74,7 +81,7 @@ function Server:start(host, port)
         local server, e = socket.bind(host, port);
         
         if server == nil then
-            io.write("Server start error: " ..e.."\n");
+            io.write("Server start error: " .. e .."\n");
             return nil;
         end
 
@@ -90,7 +97,7 @@ function Server:start(host, port)
             self:acceptClient(pool);
             while #self.connections > 0 do
                 local conn = table.remove(self.connections);
-                local job = getHandler(conn);
+                local job = getHandler(conn, self.folder);
                 pool:work(job);
             end
         end
